@@ -67,6 +67,11 @@ async fn create_message(
     state: State<AppState>,
     payload: axum::Json<CreateMessage>,
 ) -> Result<impl IntoResponse, HttpError> {
+    if payload.content.len() > 10 {
+        return Err(HttpError::bad_request(
+            "message length must be less than 10",
+        ));
+    }
     let _ = sqlx::query("INSERT INTO messages(message) VALUES($1)")
         .bind(&payload.content)
         .execute(&state.pool)
@@ -81,19 +86,14 @@ struct HttpError {
     message: String,
 }
 
-#[derive(serde::Serialize)]
-struct HttpErrorMessage {
-    message: String,
-}
-
 #[allow(unused)]
 impl HttpError {
     fn new(code: axum::http::StatusCode, message: String) -> Self {
         Self { code, message }
     }
 
-    fn bad_request(message: String) -> Self {
-        Self::new(axum::http::StatusCode::BAD_REQUEST, message)
+    fn bad_request(message: &str) -> Self {
+        Self::new(axum::http::StatusCode::BAD_REQUEST, message.to_string())
     }
 
     fn internal_server_error(message: String) -> Self {
@@ -103,9 +103,6 @@ impl HttpError {
 
 impl IntoResponse for HttpError {
     fn into_response(self) -> axum::response::Response {
-        let body = axum::Json(HttpErrorMessage {
-            message: self.message,
-        });
-        (self.code, body).into_response()
+        (self.code, self.message).into_response()
     }
 }

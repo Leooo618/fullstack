@@ -1,0 +1,7 @@
+[tools]
+tailwindcss = "4.1.10"
+
+[server]
+address = "127.0.0.1"
+port = 8080
+open = false

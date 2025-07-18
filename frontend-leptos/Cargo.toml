@@ -1,0 +1,16 @@
+[package]
+name = "frontend-leptos"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+common = { version = "0.1.0", path = "../common" }
+console_error_panic_hook = "0.1.7"
+console_log = "1.0.0"
+gloo-net = "0.6.0"
+leptos = { version = "0.8.3", features = ["csr"] }
+log = "0.4.27"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3.50"
+

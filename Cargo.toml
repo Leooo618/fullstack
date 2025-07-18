@@ -1,5 +1,5 @@
 [workspace]
-members = [ "backend", "common","frontend"]
+members = [ "backend", "common","frontend", "frontend-leptos"]
 resolver = "2"
 
 [profile]
